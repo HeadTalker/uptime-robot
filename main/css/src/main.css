@@ -1,0 +1,78 @@
+/*
+ * Colors
+ */
+/*
+ * Base structure
+ */
+/* Move down content because we have a fixed navbar that is 50px tall */
+body {
+  padding-top: 20px;
+  background: #252830;
+  color: #cfd2da;
+}
+
+a {
+  color: #cfd2da;
+}
+
+hr {
+  border-top: 1px solid #555;
+}
+
+/*
+ * Main content
+ */
+.main .page-header {
+  margin-top: 0;
+}
+
+.page-header {
+  border-bottom: 1px solid #555;
+  color: #fff;
+  padding: 25px;
+}
+
+/*
+ * Tables
+ */
+.table-hover > tbody > tr:hover {
+  background: #434857;
+  color: #fff;
+}
+
+td {
+  width: 17%;
+}
+td img {
+  height: 8px;
+  margin-left: 15px;
+}
+
+.dataTables_filter {
+  float: right;
+}
+
+.pagination {
+  margin: 0;
+  float: right;
+}
+
+.dataTables_info {
+  margin-top: 6px;
+}
+
+/*
+ * Graphs
+ */
+*:before, *:after {
+  box-sizing: inherit;
+}
+
+.l-chart {
+  padding: 20px;
+}
+
+.aspect-ratio {
+  height: 0;
+  padding-bottom: 50%;
+}

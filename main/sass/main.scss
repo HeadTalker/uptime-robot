@@ -1,0 +1,77 @@
+/*
+ * Colors
+ */
+$white: #fff;
+$dark-gray: #434857;
+$blue-gray: #cfd2da;
+$dark: #252830;
+$halfblack: #555;
+
+/*
+ * Base structure
+ */
+/* Move down content because we have a fixed navbar that is 50px tall */
+body {
+  padding-top: 20px;
+  background: $dark;
+  color: $blue-gray;
+}
+a {
+  color: $blue-gray;
+}
+hr {
+  border-top: 1px solid $halfblack;
+}
+
+/*
+ * Main content
+ */
+
+.main .page-header {
+  margin-top: 0;
+}
+.page-header {
+  border-bottom: 1px solid $halfblack;
+  color: $white;
+  padding: 25px;
+}
+
+/*
+ * Tables
+ */
+.table-hover > tbody > tr:hover {
+  background: $dark-gray;
+  color: $white;
+}
+td {
+  width: 17%;
+  img {
+    height: 8px;
+    margin-left: 15px;
+  }
+}
+.dataTables_filter {
+  float: right;
+}
+.pagination {
+  margin: 0;
+  float: right;
+}
+.dataTables_info {
+  margin-top: 6px;
+}
+
+/*
+ * Graphs
+ */
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+.l-chart {
+  padding: 20px;
+}
+.aspect-ratio {
+  height: 0;
+  padding-bottom: 50%;
+}
