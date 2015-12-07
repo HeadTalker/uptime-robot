@@ -1,5 +1,13 @@
 <h1>Uptime Robot One Pager</h1>
 
+<h3>All Your Monitors In 1 Place</h3>
+
+![Alt text](http://i.imgur.com/m98uKyX.png)
+
+<h3>View Graphs Of Response Times</h3>
+
+![Alt text](https://i.imgur.com/04YeVfe.png)
+
 <h3>Installation:</h3>
 
 1.  Clone the repository
