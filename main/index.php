@@ -34,8 +34,6 @@
   <?php die(); endif; ?>
 
 
-
-
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-12 main">
@@ -66,6 +64,7 @@
                 ]);
                 $response = curl_exec($curl);
                 $decoderesponse = json_decode($response, true);
+
 
                 foreach ($decoderesponse['monitors']['monitor'] as $monitor ) {
 
@@ -211,12 +210,26 @@
                   <?php
                   $response_datetime = [];
                   $response_value = [];
-                  foreach (array_reverse($monitor['responsetime']) as $response) {
-                    // get all the response timestamps
-                    $response_datetime[] = $response['datetime'];
-                    // get all the response values
-                    $response_value[] = $response['value'];
+
+                  // check if we have response time data
+                  if(isset($monitor['responsetime'])) {
+                    // check if its an array just incase
+                    if(is_array($monitor['responsetime'])) {
+
+                      foreach (array_reverse($monitor['responsetime']) as $response) {
+                        // get all the response timestamps
+                        $response_datetime[] = $response['datetime'];
+                        // get all the response values
+                        $response_value[] = $response['value'];
+
+                      }
+
+                    }
+
+                  } else {
+                    echo '<div class="text-center">Not enough data to make a graph yet</div>';
                   }
+
                   ?>
 
                 <script type="text/javascript">
@@ -264,6 +277,7 @@
                 </script>
 
             <?php $i++; } ?>
+
 
         </div>
       </div>
