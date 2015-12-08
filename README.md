@@ -28,10 +28,10 @@
   ```
 4.  Launch the app
 
-```
-# This may vary depending where you installed the app and/or your environment
-http://localhost/uptime-robot/main/
-```
+  ```
+  # This may vary depending where you installed the app and/or your environment
+  http://localhost/uptime-robot/main/
+  ```
 
 <h3>Building/Making Edits</h3>
 
