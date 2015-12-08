@@ -11,10 +11,17 @@
 <h3>Installation:</h3>
 
 1.  Clone the repository
+  ```
+  git clone git@github.com:HeadTalker/uptime-robot.git
+  ```
 
-2.  Copy config-sample.php in the root directory and rename it config.php
+2.  Copy config-sample.php name it config.php
 
-3.  Add your Uptime Robot API key to config.php ( must be account specific )
+  ```
+  cd uptime-robot && cp config-sample.php config.php
+  ```
+
+3.  Edit config.php and put an Uptime Robot API key ( must be account specific )
 
   ```
   $UP_ACCOUNT_API_KEY = "replace_with_yours";
@@ -26,18 +33,26 @@
 http://localhost/uptime-robot/main/
 ```
 
-<h3>Node Modules Install:</h3>
+<h3>Building/Making Edits</h3>
+
+We use <a href="https://www.npmjs.com/">NPM</a>, <a href="http://bower.io/">Bower</a>, and <a href="http://gruntjs.com/">Grunt</a>.  We recommend you use these tools to make changes to the app.
+
+<h5>Node Modules Install:</h5>
 
 ```
-# This is optional and you don't have to do this in order to run the app
 npm install
 ```
 
-<h3>Bower Components Install:</h3>
+<h5>Bower Components Install:</h5>
 
 ```
-# This is optional and you don't have to do this in order to run the app
 bower install
+```
+
+<h5>Running Grunt Tasks:</h5>
+
+```
+grunt
 ```
 
 <h3>Bugs and issues</h3>
