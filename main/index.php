@@ -66,78 +66,83 @@
                 $decoderesponse = json_decode($response, true);
 
 
-                foreach ($decoderesponse['monitors']['monitor'] as $monitor ) {
+                // provide some fallback and check if we have an array
+                if (is_array($decoderesponse['monitors']['monitor'])) {
 
-                  // monitor id
-                  $monitor_id = $monitor['id'];
-                  // monitor friendly name
-                  $monitor_name = $monitor['friendlyname'];
-                  // monitor URL
-                  $monitor_url =  $monitor['url'];
-                  // monitor type for example http, ping etc
-                  $monitor_type = $monitor['type'];
-                  // check monitor type values and give them a value
-                  switch ($monitor_type) {
-                    case 1:
-                      $monitor_type = "HTTP(s)";
-                    break;
+                  foreach ($decoderesponse['monitors']['monitor'] as $monitor ) {
 
-                    case 2:
-                      $monitor_type = "Keyword";
+                    // monitor id
+                    $monitor_id = $monitor['id'];
+                    // monitor friendly name
+                    $monitor_name = $monitor['friendlyname'];
+                    // monitor URL
+                    $monitor_url =  $monitor['url'];
+                    // monitor type for example http, ping etc
+                    $monitor_type = $monitor['type'];
+                    // check monitor type values and give them a value
+                    switch ($monitor_type) {
+                      case 1:
+                        $monitor_type = "HTTP(s)";
                       break;
 
-                    case 3:
-                      $monitor_type = "Ping";
+                      case 2:
+                        $monitor_type = "Keyword";
+                        break;
+
+                      case 3:
+                        $monitor_type = "Ping";
+                        break;
+
+                      case 4:
+                        $monitor_type = "Port";
+                        break;
+
+                      default:
+                        $monitor_type = "Unknown or Error";
+                        break;
+                    }
+                    // monitor interval every X seconds
+                    $monitor_interval = $monitor['interval'];
+                    // monitor status - up, down, paused
+                    $monitor_status =  $monitor['status'];
+                    // check monitor status values and give them a value
+                    switch ($monitor_status) {
+                      case 0:
+                        $monitor_status = "Paused";
                       break;
 
-                    case 4:
-                      $monitor_type = "Port";
-                      break;
+                      case 1:
+                        $monitor_status = "Not Checked Yet";
+                        break;
 
-                    default:
-                      $monitor_type = "Unknown or Error";
-                      break;
+                      case 2:
+                        $monitor_status = '<img src="svg/circle.svg">';
+                        break;
+
+                      case 8:
+                        $monitor_status = "SEEMS DOWN!";
+                        break;
+
+                      case 9:
+                        $monitor_status = "DOWN!";
+                        break;
+
+                      default:
+                        $monitor_status = "Unknown or Error";
+                        break;
+                    }
+                    // monitor uptime % out of 100 ratio
+                    $monitor_uptime_ratio =  $monitor['alltimeuptimeratio'];
+
+                    echo "<tr><td>" . $monitor_name . "</td>";
+                    echo "<td>" . $monitor_url . "</td>";
+                    echo "<td>" . $monitor_status . "</td>";
+                    echo "<td>" . $monitor_type . "</td>";
+                    echo "<td>" . $monitor_interval . " seconds</td>";
+                    echo "<td>" . $monitor_id . "</td>";
+                    echo "<td>" . $monitor_uptime_ratio . "%</td></tr>";
+
                   }
-                  // monitor interval every X seconds
-                  $monitor_interval = $monitor['interval'];
-                  // monitor status - up, down, paused
-                  $monitor_status =  $monitor['status'];
-                  // check monitor status values and give them a value
-                  switch ($monitor_status) {
-                    case 0:
-                      $monitor_status = "Paused";
-                    break;
-
-                    case 1:
-                      $monitor_status = "Not Checked Yet";
-                      break;
-
-                    case 2:
-                      $monitor_status = '<img src="svg/circle.svg">';
-                      break;
-
-                    case 8:
-                      $monitor_status = "SEEMS DOWN!";
-                      break;
-
-                    case 9:
-                      $monitor_status = "DOWN!";
-                      break;
-
-                    default:
-                      $monitor_status = "Unknown or Error";
-                      break;
-                  }
-                  // monitor uptime % out of 100 ratio
-                  $monitor_uptime_ratio =  $monitor['alltimeuptimeratio'];
-
-                  echo "<tr><td>" . $monitor_name . "</td>";
-                  echo "<td>" . $monitor_url . "</td>";
-                  echo "<td>" . $monitor_status . "</td>";
-                  echo "<td>" . $monitor_type . "</td>";
-                  echo "<td>" . $monitor_interval . " seconds</td>";
-                  echo "<td>" . $monitor_id . "</td>";
-                  echo "<td>" . $monitor_uptime_ratio . "%</td></tr>";
 
                 }
 
@@ -161,122 +166,125 @@
                   });
               </script>
 
-            <?php
+                <?php
 
-              // set i to 0 so we can auto increment graphs
-              $i = 0;
+                // provide some fallback and check if we have an array
+                if (is_array($decoderesponse['monitors']['monitor'])) {
 
-              foreach ($decoderesponse['monitors']['monitor'] as $monitor ) {
+                  // set i to 0 so we can auto increment graphs
+                  $i = 0;
 
-                // monitor friendly name
-                $monitor_name = $monitor['friendlyname'];
-                // monitor type for example http, ping etc
-                $monitor_type = $monitor['type'];
-                // check monitor type values and give them a value
-                switch ($monitor_type) {
-                  case 1:
-                    $monitor_type = "HTTP(s)";
-                  break;
+                  foreach ($decoderesponse['monitors']['monitor'] as $monitor ) {
 
-                  case 2:
-                    $monitor_type = "Keyword";
-                    break;
+                    // monitor friendly name
+                    $monitor_name = $monitor['friendlyname'];
+                    // monitor type for example http, ping etc
+                    $monitor_type = $monitor['type'];
+                    // check monitor type values and give them a value
+                    switch ($monitor_type) {
+                      case 1:
+                        $monitor_type = "HTTP(s)";
+                      break;
 
-                  case 3:
-                    $monitor_type = "Ping";
-                    break;
+                      case 2:
+                        $monitor_type = "Keyword";
+                        break;
 
-                  case 4:
-                    $monitor_type = "Port";
-                    break;
+                      case 3:
+                        $monitor_type = "Ping";
+                        break;
 
-                  default:
-                    $monitor_type = "Unknown or Error";
-                    break;
-                }
+                      case 4:
+                        $monitor_type = "Port";
+                        break;
 
-                ?>
-
-                  <div class="col-md-12 text-center">
-                    <h3><?php echo $monitor_name; ?></h3>
-                    <h5><?php echo $monitor_type; ?></h5>
-                    <div class="l-chart">
-                      <div class="aspect-ratio">
-                        <canvas id="chart<?php echo $i; ?>"></canvas>
-                      </div>
-                    </div>
-                  </div>
-
-                  <?php
-                  $response_datetime = [];
-                  $response_value = [];
-
-                  // check if we have response time data
-                  if(isset($monitor['responsetime'])) {
-                    // check if its an array just incase
-                    if(is_array($monitor['responsetime'])) {
-
-                      foreach (array_reverse($monitor['responsetime']) as $response) {
-                        // get all the response timestamps
-                        $response_datetime[] = $response['datetime'];
-                        // get all the response values
-                        $response_value[] = $response['value'];
-
-                      }
-
+                      default:
+                        $monitor_type = "Unknown or Error";
+                        break;
                     }
 
-                  } else {
-                    echo '<div class="text-center">Not enough data to make a graph yet</div>';
-                  }
+                    ?>
 
-                  ?>
+                      <div class="col-md-12 text-center">
+                        <h3><?php echo $monitor_name; ?></h3>
+                        <h5><?php echo $monitor_type; ?></h5>
+                        <div class="l-chart">
+                          <div class="aspect-ratio">
+                            <canvas id="chart<?php echo $i; ?>"></canvas>
+                          </div>
+                        </div>
+                      </div>
 
-                <script type="text/javascript">
+                      <?php
+                      $response_datetime = [];
+                      $response_value = [];
 
-                  var response_datetime = <?php echo json_encode($response_datetime);?>;
-                  var response_value = <?php echo json_encode($response_value);?>;
+                      // check if we have response time data
+                      if(isset($monitor['responsetime'])) {
+                        // check if its an array just incase
+                        if(is_array($monitor['responsetime'])) {
 
-                  Chart.defaults.global.animationEasing        = 'easeInOutQuad',
-                  Chart.defaults.global.responsive             = true;
-                  Chart.defaults.global.tooltipFillColor       = '#FFFFFF';
-                  Chart.defaults.global.tooltipFontColor       = '#111';
-                  Chart.defaults.global.tooltipCaretSize       = 0;
-                  Chart.defaults.global.maintainAspectRatio    = true;
-                  Chart.defaults.Line.scaleShowHorizontalLines = false;
-                  Chart.defaults.Line.scaleShowHorizontalLines = false;
-                  Chart.defaults.Line.scaleGridLineColor       = '#434857';
-                  Chart.defaults.Line.scaleLineColor           = '#434857';
+                          foreach (array_reverse($monitor['responsetime']) as $response) {
+                            // get all the response timestamps
+                            $response_datetime[] = $response['datetime'];
+                            // get all the response values
+                            $response_value[] = $response['value'];
 
-                  var chart    = document.getElementById("<?php echo 'chart' . $i; ?>").getContext('2d'),
-                    gradient = chart.createLinearGradient(0, 0, 0, 450);
+                          }
 
-                  var data  = {
-                    labels: response_datetime,
+                        }
 
-                    datasets: [
-                      {
-                        label: 'Response Time',
-                        fillColor: gradient,
-                        strokeColor: '#1CA8DD',
-                        pointColor: 'white',
-                        pointStrokeColor: 'rgba(220,220,220,1)',
-                        pointHighlightFill: '#fff',
-                        pointHighlightStroke: 'rgba(220,220,220,1)',
-                        data: response_value
+                      } else {
+                        echo '<div class="text-center">Not enough data to make a graph yet</div>';
                       }
-                    ]
-                  };
 
-                  gradient.addColorStop(0, 'rgba(0, 161, 255, 0.5)');
-                  gradient.addColorStop(0.5, 'rgba(0, 161, 255, 0.25)');
-                  gradient.addColorStop(1, 'rgba(0, 161, 255, 0)');
+                      ?>
 
-                  var chart = new Chart(chart).Line(data);
+                  <script type="text/javascript">
 
-                </script>
+                    var response_datetime = <?php echo json_encode($response_datetime);?>;
+                    var response_value = <?php echo json_encode($response_value);?>;
 
-            <?php $i++; } ?>
+                    Chart.defaults.global.animationEasing        = 'easeInOutQuad',
+                    Chart.defaults.global.responsive             = true;
+                    Chart.defaults.global.tooltipFillColor       = '#FFFFFF';
+                    Chart.defaults.global.tooltipFontColor       = '#111';
+                    Chart.defaults.global.tooltipCaretSize       = 0;
+                    Chart.defaults.global.maintainAspectRatio    = true;
+                    Chart.defaults.Line.scaleShowHorizontalLines = false;
+                    Chart.defaults.Line.scaleShowHorizontalLines = false;
+                    Chart.defaults.Line.scaleGridLineColor       = '#434857';
+                    Chart.defaults.Line.scaleLineColor           = '#434857';
+
+                    var chart    = document.getElementById("<?php echo 'chart' . $i; ?>").getContext('2d'),
+                      gradient = chart.createLinearGradient(0, 0, 0, 450);
+
+                    var data  = {
+                      labels: response_datetime,
+
+                      datasets: [
+                        {
+                          label: 'Response Time',
+                          fillColor: gradient,
+                          strokeColor: '#1CA8DD',
+                          pointColor: 'white',
+                          pointStrokeColor: 'rgba(220,220,220,1)',
+                          pointHighlightFill: '#fff',
+                          pointHighlightStroke: 'rgba(220,220,220,1)',
+                          data: response_value
+                        }
+                      ]
+                    };
+
+                    gradient.addColorStop(0, 'rgba(0, 161, 255, 0.5)');
+                    gradient.addColorStop(0.5, 'rgba(0, 161, 255, 0.25)');
+                    gradient.addColorStop(1, 'rgba(0, 161, 255, 0)');
+
+                    var chart = new Chart(chart).Line(data);
+
+                  </script>
+
+                <?php $i++; } } ?>
 
 
         </div>
