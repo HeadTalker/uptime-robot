@@ -1,5 +1,8 @@
 <h1>Uptime Robot One Pager</h1>
 
+Check out the demo <a href="http://up-monitor.com/">http://up-monitor.com/</a>
+
+
 <h3>All Your Monitors In 1 Place</h3>
 
 ![Alt text](http://i.imgur.com/m98uKyX.png)
@@ -32,6 +35,11 @@
   # This may vary depending where you installed the app and/or your environment
   http://localhost/uptime-robot/main/
   ```
+  
+<h3>Usage</h3>
+
+This is a simple one page application to monior uptime.  It is powered by the <a href="https://uptimerobot.com/">Uptime Robot </a> API.  Uptime Robot can notify you about downtime. They offer up to 50 Monitors, Checked Every 5 Minutes, Totally Free.
+  
 
 <h3>Building/Making Edits</h3>
 
