@@ -1,6 +1,7 @@
 /*
- * Colors
- */
+* Colors
+*/
+
 $white: #fff;
 $dark-gray: #434857;
 $blue-gray: #cfd2da;
@@ -8,9 +9,9 @@ $dark: #252830;
 $halfblack: #555;
 
 /*
- * Base structure
- */
-/* Move down content because we have a fixed navbar that is 50px tall */
+* Base structure
+*/
+
 body {
   padding-top: 20px;
   background: $dark;
@@ -24,8 +25,8 @@ hr {
 }
 
 /*
- * Main content
- */
+* Main content
+*/
 
 .main .page-header {
   margin-top: 0;
@@ -37,8 +38,9 @@ hr {
 }
 
 /*
- * Tables
- */
+* Tables
+*/
+
 .table-hover > tbody > tr:hover {
   background: $dark-gray;
   color: $white;
@@ -62,8 +64,9 @@ td {
 }
 
 /*
- * Graphs
- */
+* Graphs
+*/
+
 *:before,
 *:after {
   box-sizing: inherit;
