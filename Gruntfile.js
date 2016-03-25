@@ -94,7 +94,8 @@ module.exports = function(grunt){
             'bower_components/Chart.js/Chart.js',
             'bower_components/bootstrap/dist/js/bootstrap.js',
             'main/js/src/jquery.dataTables.min.js',
-            'main/js/src/dataTables.bootstrap.min.js'
+            'main/js/src/dataTables.bootstrap.min.js',
+            'main/js/src/main.js'
           ]
         }
       }

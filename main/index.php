@@ -8,284 +8,128 @@
   </head>
   <body>
 
-  <?php
-  // require our config api key
-  require_once(__DIR__ . '/../config.php');
-
-  // function to check if curl is installed
-  function _isCurl(){
-    return function_exists('curl_version');
-  }
-
-  // time to check curl - if no curl then show them CURL install info
-  if (_isCurl() !== true): ?>
+    <?php
+    // require our config api key
+    require_once( __DIR__ . '/../config.php' );
+    // require our main php file
+    require_once( __DIR__ . '/php/main.php' );
+    // init our class
+    $monitor_robot = new monitor_robot();
+    // Check if curl is installed and show CURL install info if its not installed
+    if ( $monitor_robot->monitor_curl() === FALSE ): ?>
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-12 text-center">
-        <div class="alert alert-info alert-dismissible fade in" role="alert">
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-          <h4>Oh snap! You don't have CURL installed!</h4>
-          <p>Don't worry.  You can download it for free.</p>
-          <p><a href="http://curl.haxx.se/download.html" target="_blank"><button type="button" class="btn btn-primary">Go Download Curl</button></a></p>
+          <div class="alert alert-info alert-dismissible fade in" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+            <h4>Oh snap! You don't have CURL installed!</h4>
+            <p>Don't worry.  You can download it for free.</p>
+            <p><a href="http://curl.haxx.se/download.html" target="_blank"><button type="button" class="btn btn-primary">Go Download Curl</button></a></p>
+          </div>
         </div>
       </div>
-      </div>
     </div>
-  <?php die(); endif; ?>
-
+    <?php die(); endif; ?>
 
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-12 main">
+
           <h1 class="page-header text-center">Uptime Monitor</h1>
 
-              <table id="up-get-monitors-table" class="table table-hover">
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>URL</th>
-                    <th>Status</th>
-                    <th>Type</th>
-                    <th>Interval</th>
-                    <th>ID</th>
-                    <th>Uptime</th>
-                  </tr>
-                </thead>
-                <tbody>
-                <?php
+          <table id="up-get-monitors-table" class="table table-hover">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>URL</th>
+                <th>Status</th>
+                <th>Type</th>
+                <th>Interval</th>
+                <th>ID</th>
+                <th>Uptime</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php
+                $monitor_response = $monitor_robot->monitor_endpoint( $UP_ACCOUNT_API_KEY ); // Call the endpoint and get the data
+                $monitor_data     = $monitor_robot->monitor_table_body( $monitor_response['monitors']['monitor'] ); // Create our data table body
+              ?>
+            </tbody>
+          </table>
 
-                // set our end point
-                $endpoint = "https://api.uptimerobot.com/getMonitors?apiKey=" . $UP_ACCOUNT_API_KEY . "&responseTimes=1&logs=1&format=json&noJsonCallback=1";
-                $curl = curl_init($endpoint);
+          <?php if ( is_array( $monitor_response['monitors']['monitor'] ) ): // check if we have monitors before trying to show charts
 
-                curl_setopt_array($curl, [
-                  CURLOPT_RETURNTRANSFER => true,
-                  CURLOPT_URL            => $endpoint,
-                ]);
-                $response = curl_exec($curl);
-                $decoderesponse = json_decode($response, true);
+            $i = 0;
 
+            foreach ( $monitor_response['monitors']['monitor'] as $monitor ): // loop through each monitor and create a chart
 
-                // provide some fallback and check if we have an array
-                if (is_array($decoderesponse['monitors']['monitor'])) {
+              if ( isset( $monitor['responsetime'] ) ): ?>
 
-                  foreach ($decoderesponse['monitors']['monitor'] as $monitor ) {
+                <div class="col-md-12 text-center">
+                  <h3><?php echo $monitor['friendlyname']; ?></h3>
+                  <h5><?php echo $monitor_robot->monitor_type( $monitor['type'] ); ?></h5>
+                  <div class="l-chart">
+                    <div class="aspect-ratio">
+                      <canvas id="chart<?php echo $i; ?>"></canvas>
+                    </div>
+                  </div>
+                </div>
 
-                    // monitor id
-                    $monitor_id = $monitor['id'];
-                    // monitor friendly name
-                    $monitor_name = $monitor['friendlyname'];
-                    // monitor URL
-                    $monitor_url =  $monitor['url'];
-                    // monitor type for example http, ping etc
-                    $monitor_type = $monitor['type'];
-                    // check monitor type values and give them a value
-                    switch ($monitor_type) {
-                      case 1:
-                        $monitor_type = "HTTP(s)";
-                      break;
+                <?php list( $response_datetime, $response_value ) = $monitor_robot->monitor_response_data( $monitor['responsetime'] ); ?>
 
-                      case 2:
-                        $monitor_type = "Keyword";
-                        break;
+                <script type="text/javascript">
 
-                      case 3:
-                        $monitor_type = "Ping";
-                        break;
+                var response_datetime = <?php echo json_encode($response_datetime);?>;
+                var response_value    = <?php echo json_encode($response_value);?>;
 
-                      case 4:
-                        $monitor_type = "Port";
-                        break;
+                Chart.defaults.global.animationEasing        = 'easeInOutQuad',
+                Chart.defaults.global.responsive             = true;
+                Chart.defaults.global.tooltipFillColor       = '#FFFFFF';
+                Chart.defaults.global.tooltipFontColor       = '#111';
+                Chart.defaults.global.tooltipCaretSize       = 0;
+                Chart.defaults.global.maintainAspectRatio    = true;
+                Chart.defaults.Line.scaleShowHorizontalLines = false;
+                Chart.defaults.Line.scaleShowHorizontalLines = false;
+                Chart.defaults.Line.scaleGridLineColor       = '#434857';
+                Chart.defaults.Line.scaleLineColor           = '#434857';
 
-                      default:
-                        $monitor_type = "Unknown or Error";
-                        break;
+                var chart    = document.getElementById("<?php echo 'chart' . $i; ?>").getContext('2d'),
+                gradient     = chart.createLinearGradient(0, 0, 0, 450);
+
+                var data  = {
+                  labels: response_datetime,
+
+                  datasets: [
+                    {
+                      label: 'Response Time',
+                      fillColor: gradient,
+                      strokeColor: '#1CA8DD',
+                      pointColor: 'white',
+                      pointStrokeColor: 'rgba(220,220,220,1)',
+                      pointHighlightFill: '#fff',
+                      pointHighlightStroke: 'rgba(220,220,220,1)',
+                      data: response_value,
                     }
-                    // monitor interval every X seconds
-                    $monitor_interval = $monitor['interval'];
-                    // monitor status - up, down, paused
-                    $monitor_status =  $monitor['status'];
-                    // check monitor status values and give them a value
-                    switch ($monitor_status) {
-                      case 0:
-                        $monitor_status = "Paused";
-                      break;
+                  ]
+                };
 
-                      case 1:
-                        $monitor_status = "Not Checked Yet";
-                        break;
+                gradient.addColorStop(0, 'rgba(0, 161, 255, 0.5)');
+                gradient.addColorStop(0.5, 'rgba(0, 161, 255, 0.25)');
+                gradient.addColorStop(1, 'rgba(0, 161, 255, 0)');
 
-                      case 2:
-                        $monitor_status = '<img src="svg/circle.svg">';
-                        break;
+                var chart = new Chart(chart).Line(data);
 
-                      case 8:
-                        $monitor_status = "SEEMS DOWN!";
-                        break;
+                </script>
 
-                      case 9:
-                        $monitor_status = "DOWN!";
-                        break;
+              <?php else:
 
-                      default:
-                        $monitor_status = "Unknown or Error";
-                        break;
-                    }
-                    // monitor uptime % out of 100 ratio
-                    $monitor_uptime_ratio =  $monitor['alltimeuptimeratio'];
+               echo '<div class="text-center">' . $monitor['friendlyname'] . 'does not enough data to make a graph yet</div>';
 
-                    echo "<tr><td>" . $monitor_name . "</td>";
-                    echo "<td>" . $monitor_url . "</td>";
-                    echo "<td>" . $monitor_status . "</td>";
-                    echo "<td>" . $monitor_type . "</td>";
-                    echo "<td>" . $monitor_interval . " seconds</td>";
-                    echo "<td>" . $monitor_id . "</td>";
-                    echo "<td>" . $monitor_uptime_ratio . "%</td></tr>";
+              endif;
 
-                  }
+            $i++; endforeach;
 
-                }
-
-                ?>
-              </tbody>
-            </table>
-
-              <script type="text/javascript">
-              $(document).ready(function() {
-                  jQuery('#up-get-monitors-table').DataTable({
-                    "aaSorting": [],
-                    "oLanguage": {
-                        "sInfo": 'Showing _START_ to _END_ of _TOTAL_ Monitors.',
-                        "sInfoEmpty": 'No Monitors yet.',
-                        "sInfoFiltered": 'filtered from _MAX_ total Monitors',
-                        "sZeroRecords": 'No Monitors Found',
-                        "sLengthMenu": 'Show _MENU_ Monitors',
-                        "sEmptyTable": "No Monitors found currently.",
-                      }
-                    });
-                  });
-              </script>
-
-                <?php
-
-                // provide some fallback and check if we have an array
-                if (is_array($decoderesponse['monitors']['monitor'])) {
-
-                  // set i to 0 so we can auto increment graphs
-                  $i = 0;
-
-                  foreach ($decoderesponse['monitors']['monitor'] as $monitor ) {
-
-                    // monitor friendly name
-                    $monitor_name = $monitor['friendlyname'];
-                    // monitor type for example http, ping etc
-                    $monitor_type = $monitor['type'];
-                    // check monitor type values and give them a value
-                    switch ($monitor_type) {
-                      case 1:
-                        $monitor_type = "HTTP(s)";
-                      break;
-
-                      case 2:
-                        $monitor_type = "Keyword";
-                        break;
-
-                      case 3:
-                        $monitor_type = "Ping";
-                        break;
-
-                      case 4:
-                        $monitor_type = "Port";
-                        break;
-
-                      default:
-                        $monitor_type = "Unknown or Error";
-                        break;
-                    }
-
-                    ?>
-
-                      <div class="col-md-12 text-center">
-                        <h3><?php echo $monitor_name; ?></h3>
-                        <h5><?php echo $monitor_type; ?></h5>
-                        <div class="l-chart">
-                          <div class="aspect-ratio">
-                            <canvas id="chart<?php echo $i; ?>"></canvas>
-                          </div>
-                        </div>
-                      </div>
-
-                      <?php
-                      $response_datetime = [];
-                      $response_value = [];
-
-                      // check if we have response time data
-                      if(isset($monitor['responsetime'])) {
-                        // check if its an array just incase
-                        if(is_array($monitor['responsetime'])) {
-
-                          foreach (array_reverse($monitor['responsetime']) as $response) {
-                            // get all the response timestamps
-                            $response_datetime[] = $response['datetime'];
-                            // get all the response values
-                            $response_value[] = $response['value'];
-
-                          }
-
-                        }
-
-                      } else {
-                        echo '<div class="text-center">Not enough data to make a graph yet</div>';
-                      }
-
-                      ?>
-
-                  <script type="text/javascript">
-
-                    var response_datetime = <?php echo json_encode($response_datetime);?>;
-                    var response_value = <?php echo json_encode($response_value);?>;
-
-                    Chart.defaults.global.animationEasing        = 'easeInOutQuad',
-                    Chart.defaults.global.responsive             = true;
-                    Chart.defaults.global.tooltipFillColor       = '#FFFFFF';
-                    Chart.defaults.global.tooltipFontColor       = '#111';
-                    Chart.defaults.global.tooltipCaretSize       = 0;
-                    Chart.defaults.global.maintainAspectRatio    = true;
-                    Chart.defaults.Line.scaleShowHorizontalLines = false;
-                    Chart.defaults.Line.scaleShowHorizontalLines = false;
-                    Chart.defaults.Line.scaleGridLineColor       = '#434857';
-                    Chart.defaults.Line.scaleLineColor           = '#434857';
-
-                    var chart    = document.getElementById("<?php echo 'chart' . $i; ?>").getContext('2d'),
-                      gradient = chart.createLinearGradient(0, 0, 0, 450);
-
-                    var data  = {
-                      labels: response_datetime,
-
-                      datasets: [
-                        {
-                          label: 'Response Time',
-                          fillColor: gradient,
-                          strokeColor: '#1CA8DD',
-                          pointColor: 'white',
-                          pointStrokeColor: 'rgba(220,220,220,1)',
-                          pointHighlightFill: '#fff',
-                          pointHighlightStroke: 'rgba(220,220,220,1)',
-                          data: response_value
-                        }
-                      ]
-                    };
-
-                    gradient.addColorStop(0, 'rgba(0, 161, 255, 0.5)');
-                    gradient.addColorStop(0.5, 'rgba(0, 161, 255, 0.25)');
-                    gradient.addColorStop(1, 'rgba(0, 161, 255, 0)');
-
-                    var chart = new Chart(chart).Line(data);
-
-                  </script>
-
-                <?php $i++; } } ?>
-
+          endif; ?>
 
         </div>
       </div>
