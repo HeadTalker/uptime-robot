@@ -39,11 +39,35 @@ module.exports = function(grunt){
             expand: true
           },
           {
-            cwd: 'bower_components/Chart.js/',
-            src: 'Chart.js',
+            cwd: 'bower_components/Chart.js/dist/',
+            src: 'Chart.min.js',
             dest: 'main/js/src/',
             expand: true
-          }
+          },
+          {
+            cwd: 'bower_components/tether/dist/js/',
+            src: 'tether.min.js',
+            dest: 'main/js/src/',
+            expand: true
+          },
+          {
+            cwd: 'bower_components/datatables.net/js/',
+            src: 'jquery.dataTables.min.js',
+            dest: 'main/js/src/',
+            expand: true
+          },
+          {
+            cwd: 'bower_components/datatables.net-dt/css/',
+            src: 'jquery.dataTables.min.css',
+            dest: 'main/css/src/',
+            expand: true
+          },
+          {
+            cwd: 'bower_components/datatables.net-dt/images/',
+            src: '**/*',
+            dest: 'main/img/',
+            expand: true
+          },
         ]
       }
     },
@@ -75,9 +99,8 @@ module.exports = function(grunt){
         files: {
           'main/css/dist/all.styles.min.css':
            [
-            'bower_components/bootstrap/dist/css/bootstrap.min.css',
-            'main/css/src/dataTables.bootstrap.min.css',
-            'main/css/src/responsive.bootstrap.min.css',
+            'main/css/src/bootstrap.min.css',
+            'main/css/src/jquery.dataTables.min.css',
             'main/css/src/main.css'
           ]
         }
@@ -90,11 +113,11 @@ module.exports = function(grunt){
         files: {
           'main/js/dist/all.scripts.min.js':
            [
-            'bower_components/jquery/dist/jquery.js',
-            'bower_components/Chart.js/Chart.js',
-            'bower_components/bootstrap/dist/js/bootstrap.js',
+            'main/js/src/jquery.js',
+            'main/js/src/tether.min.js',
+            'main/js/src/bootstrap.js',
+            'main/js/src/Chart.min.js',
             'main/js/src/jquery.dataTables.min.js',
-            'main/js/src/dataTables.bootstrap.min.js',
             'main/js/src/main.js'
           ]
         }

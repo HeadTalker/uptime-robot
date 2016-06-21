@@ -24,7 +24,7 @@ Check out the demo <a href="http://up-monitor.com/">http://up-monitor.com/</a>
   cd uptime-robot && cp config-sample.php config.php
   ```
 
-3.  Edit config.php and put an Uptime Robot API key ( must be account specific )
+3.  Edit config.php and put an Uptime Robot API key
 
   ```
   $UP_ACCOUNT_API_KEY = "replace_with_yours";
@@ -35,11 +35,11 @@ Check out the demo <a href="http://up-monitor.com/">http://up-monitor.com/</a>
   # This may vary depending where you installed the app and/or your environment
   http://localhost/uptime-robot/main/
   ```
-  
+
 <h3>Usage</h3>
 
 This is a simple one page application to monior uptime.  It is powered by the <a href="https://uptimerobot.com/">Uptime Robot </a> API.  Uptime Robot can notify you about downtime. They offer up to 50 Monitors, Checked Every 5 Minutes, Totally Free.
-  
+
 
 <h3>Building/Making Edits</h3>
 

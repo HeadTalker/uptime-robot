@@ -13,37 +13,33 @@ $halfblack: #555;
 */
 
 body {
-  padding-top: 20px;
   background: $dark;
   color: $blue-gray;
 }
 a {
   color: $blue-gray;
 }
-hr {
-  border-top: 1px solid $halfblack;
-}
-
-/*
-* Main content
-*/
-
-.main .page-header {
-  margin-top: 0;
-}
-.page-header {
-  border-bottom: 1px solid $halfblack;
-  color: $white;
-  padding: 25px;
-}
 
 /*
 * Tables
 */
-
+.dataTables_wrapper {
+  width: 99%;
+  select {
+    color: $dark-gray !important;
+  }
+  .dataTables_info, .dataTables_length, .dataTables_filter,  select {
+    color: $blue-gray;
+  }
+}
 .table-hover > tbody > tr:hover {
   background: $dark-gray;
-  color: $white;
+}
+table.dataTable tbody tr {
+  background: none;
+}
+.table-bordered, .table-bordered td, .table-bordered th {
+  border: 1px solid $dark-gray;
 }
 td {
   width: 17%;
@@ -61,20 +57,4 @@ td {
 }
 .dataTables_info {
   margin-top: 6px;
-}
-
-/*
-* Graphs
-*/
-
-*:before,
-*:after {
-  box-sizing: inherit;
-}
-.l-chart {
-  padding: 20px;
-}
-.aspect-ratio {
-  height: 0;
-  padding-bottom: 50%;
 }

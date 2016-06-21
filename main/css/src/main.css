@@ -5,7 +5,6 @@
 * Base structure
 */
 body {
-  padding-top: 20px;
   background: #252830;
   color: #cfd2da;
 }
@@ -14,29 +13,29 @@ a {
   color: #cfd2da;
 }
 
-hr {
-  border-top: 1px solid #555;
-}
-
-/*
-* Main content
-*/
-.main .page-header {
-  margin-top: 0;
-}
-
-.page-header {
-  border-bottom: 1px solid #555;
-  color: #fff;
-  padding: 25px;
-}
-
 /*
 * Tables
 */
+.dataTables_wrapper {
+  width: 99%;
+}
+.dataTables_wrapper select {
+  color: #434857 !important;
+}
+.dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, .dataTables_wrapper select {
+  color: #cfd2da;
+}
+
 .table-hover > tbody > tr:hover {
   background: #434857;
-  color: #fff;
+}
+
+table.dataTable tbody tr {
+  background: none;
+}
+
+.table-bordered, .table-bordered td, .table-bordered th {
+  border: 1px solid #434857;
 }
 
 td {
@@ -58,20 +57,4 @@ td img {
 
 .dataTables_info {
   margin-top: 6px;
-}
-
-/*
-* Graphs
-*/
-*:before, *:after {
-  box-sizing: inherit;
-}
-
-.l-chart {
-  padding: 20px;
-}
-
-.aspect-ratio {
-  height: 0;
-  padding-bottom: 50%;
 }

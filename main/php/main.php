@@ -1,6 +1,12 @@
 <?php
 
 /**
+* Require Config
+*/
+
+require_once( __DIR__ . '/../../config.php' );
+
+/**
 * Uptime Robot Class
 */
 
@@ -9,10 +15,8 @@ class monitor_robot {
 
   /**
   * Check if curl is installed.
-  * Returns TRUE if it is installed.
-  * Returns FALSE if its NOT installed.
   *
-  * @return  bool
+  * @return bool true | false  Returns true if CURL is installed. | Returns false  if CURL is NOT installed.
   */
 
   public function monitor_curl() {
@@ -21,10 +25,11 @@ class monitor_robot {
 
   /**
   * Set the API endpoint for uptime robot
-  * https://uptimerobot.com/api
   *
-  * @param   $UP_ACCOUNT_API_KEY - uptime robot api key
-  * @return  $decoderesponse - decoded json response
+  * @param  string $UP_ACCOUNT_API_KEY Your uptime robot api key
+  * @return array  $monitor_response Decoded json response from the API
+  *
+  * @link https://uptimerobot.com/api
   */
 
   public function monitor_endpoint( $UP_ACCOUNT_API_KEY ) {
@@ -45,7 +50,7 @@ class monitor_robot {
   /**
   * Prints out the table body in the datatables with relevant info
   *
-  * @param  $monitor_data
+  * @param array $monitor_data Monitor Data
   */
 
   public function monitor_table_body( $monitor_data ) {
@@ -79,8 +84,8 @@ class monitor_robot {
   /**
   * Monitor Response Data Timestamps and values
   *
-  * @param  array - $monitor_response
-  * @return array - $response_datetime, $response_value - Array of timestamps and array of values
+  * @param  array $monitor_response   Monitor response data
+  * @return array $data               Array of timestamps and array of values
   */
 
   public function monitor_response_data( $monitor_response_data ) {
@@ -100,7 +105,9 @@ class monitor_robot {
 
     }
 
-    return array( $response_datetime, $response_value );
+    $data = array( $response_datetime, $response_value );
+
+    return $data;
 
   }
 
@@ -108,58 +115,140 @@ class monitor_robot {
   /**
   * Monitor Type Name
   *
-  * @param  int - $monitor_type
-  * @return str - monitor type
+  * @param  int    $type          The monitor type number value
+  * @return string $monitor_name  The monitor string name
   */
 
-  public function monitor_type( $monitor_type ) {
-    switch ( $monitor_type ) {
+  public function monitor_type( $type ) {
+    switch ( $type ) {
     case 1:
-      return 'HTTP(s)';
+      $monitor_name = _( 'HTTP(s)' );
       break;
     case 2:
-      return 'Keyword';
+      $monitor_name = _( 'Keyword' );
       break;
     case 3:
-      return 'Ping';
+      $monitor_name = _( 'Ping' );
       break;
     case 4:
-      return 'Port';
+      $monitor_name = _( 'Port' );
       break;
     default:
-      return 'Unknown or Error';
+      $monitor_name = _( 'Unknown or Error' );
       break;
     }
+    return $monitor_name;
   }
 
   /**
   * Monitor Status Name
   *
-  * @param   int - $monitor_status
-  * @return  str - monitor type
+  * @param  int    $status      The monitor status number value
+  * @return string $status_name The monitor string name
   */
 
-  public function monitor_status( $monitor_status ) {
-    switch ( $monitor_status ) {
+  public function monitor_status( $status ) {
+    switch ( $status ) {
     case 0:
-      return 'Paused';
+      $status_name = _( 'Paused' );
       break;
     case 1:
-      return 'Not Checked Yet';
+      $status_name = _( 'Not Checked Yet' );
       break;
     case 2:
-      return '<img src="svg/circle.svg">';
+      $status_name = _( '<img src="svg/circle.svg">' );
       break;
     case 8:
-      return 'SEEMS DOWN!';
+      $status_name = _( 'SEEMS DOWN!' );
       break;
     case 9:
-      return 'DOWN!';
+      $status_name = _( 'DOWN!' );
       break;
     default:
-      return 'Unknown or Error';
+      $status_name = _( 'Unknown or Error' );
       break;
     }
+    return $status_name;
+  }
+
+  /**
+  * Create charts with response time data
+  *
+  * @param array $monitor_response Monitor data
+  */
+
+  public function charts( $monitor_response ) {
+
+    if ( is_array( $monitor_response['monitors']['monitor'] ) ): // check if we have monitors before trying to show charts
+
+      $i = 0;
+
+      if ( count( $monitor_response['monitors']['monitor'] ) > 1 ) {
+        $column = 6;
+      } else {
+        $column = 12;
+      }
+
+      foreach ( $monitor_response['monitors']['monitor'] as $monitor ): // loop through each monitor and create a chart
+
+        if ( isset( $monitor['responsetime'] ) ): ?>
+
+          <div class="col-md-<?php echo $column; ?> col-chart text-xs-center">
+            <h3><?php echo $monitor['friendlyname']; ?></h3>
+            <h6><?php echo $this->monitor_type( $monitor['type'] ) . ' ' . _( 'Response Times' ); ?></h6>
+            <canvas id="chart<?php echo $i; ?>"></canvas>
+          </div>
+
+          <?php list( $response_datetime, $response_value ) = $this->monitor_response_data( $monitor['responsetime'] ); ?>
+
+          <script type="text/javascript">
+
+          var response_datetime = <?php echo json_encode($response_datetime);?>;
+          var response_value    = <?php echo json_encode($response_value);?>;
+
+          jQuery(document).ready(function() {
+            var ctx = document.getElementById("<?php echo 'chart' . $i; ?>");
+            var myChart = new Chart(ctx, {
+              type: 'line',
+              data: {
+                labels: response_datetime,
+                datasets: [
+                  {
+                    backgroundColor: 'rgba(0, 161, 255, 0.02)',
+                    borderColor: '#1CA8DD',
+                    pointBackgroundColor: 'white',
+                    borderJoinStyle: 'miter',
+                    pointBorderWidth: 1,
+                    data: response_value,
+                  },
+                ]
+              },
+              options: {
+                legend: {
+                  display: false,
+                },
+                scales: {
+                  yAxes: [{
+                    ticks: {
+                      beginAtZero: true
+                    }
+                  }],
+                },
+              }
+            });
+          });
+
+          </script>
+
+        <?php else: ?>
+
+         <div class="text-xs-center"><?php echo $monitor['friendlyname'] . ' ' . _( 'does not enough data to make a graph yet.' ); ?></div>
+
+       <?php endif;
+
+      $i++; endforeach;
+
+    endif;
   }
 
 
