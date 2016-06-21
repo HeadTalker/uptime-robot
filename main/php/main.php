@@ -269,10 +269,11 @@ class monitor_robot {
 
           <script type="text/javascript">
 
-          var response_datetime = <?php echo json_encode($response_datetime);?>;
-          var response_value    = <?php echo json_encode($response_value);?>;
-
           jQuery(document).ready(function() {
+
+            var response_datetime = <?php echo json_encode($response_datetime);?>;
+            var response_value    = <?php echo json_encode($response_value);?>;
+
             var ctx = document.getElementById("<?php echo 'chart' . $i; ?>");
             var myChart = new Chart(ctx, {
               type: 'line',
@@ -304,7 +305,7 @@ class monitor_robot {
             });
           });
 
-          </script>
+        </script>
 
         <?php else: ?>
 
