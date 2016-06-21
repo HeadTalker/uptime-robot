@@ -57,10 +57,15 @@ npm install
 bower install
 ```
 
-<h5>Running Grunt Tasks:</h5>
+<h5>Running Grunt Tasks Continuously:</h5>
 
 ```
 grunt
+```
+<h5>Running Grunt Tasks Once:</h5>
+
+```
+grunt build
 ```
 
 <h3>Bugs and issues</h3>
