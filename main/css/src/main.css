@@ -20,9 +20,9 @@ a {
   width: 99%;
 }
 .dataTables_wrapper select {
-  color: #434857 !important;
+  color: #434857;
 }
-.dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, .dataTables_wrapper select {
+.dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter {
   color: #cfd2da;
 }
 

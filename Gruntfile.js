@@ -65,7 +65,7 @@ module.exports = function(grunt){
           {
             cwd: 'bower_components/datatables.net-dt/images/',
             src: '**/*',
-            dest: 'main/img/',
+            dest: 'main/css/images/',
             expand: true
           },
         ]

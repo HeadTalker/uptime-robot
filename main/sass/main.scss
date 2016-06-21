@@ -26,9 +26,9 @@ a {
 .dataTables_wrapper {
   width: 99%;
   select {
-    color: $dark-gray !important;
+    color: $dark-gray;
   }
-  .dataTables_info, .dataTables_length, .dataTables_filter,  select {
+  .dataTables_info, .dataTables_length, .dataTables_filter {
     color: $blue-gray;
   }
 }
