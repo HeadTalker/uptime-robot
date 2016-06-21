@@ -15,7 +15,7 @@ Check out the demo <a href="http://up-monitor.com/">http://up-monitor.com/</a>
 
 1.  Clone the repository
   ```
-  git clone git@github.com:HeadTalker/uptime-robot.git
+  git clone https://github.com/HeadTalker/uptime-robot.git 
   ```
 
 2.  Copy config-sample.php name it config.php
