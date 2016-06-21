@@ -125,7 +125,7 @@ class monitor_robot {
         $column = 12;
       }
  
-      foreach ( $monitor_response['monitors']['monitor'] as $monitor ): // loop through each monitor and create a chart
+      foreach ( $monitor_response['monitors']['monitor'] as $monitor ):
           
         echo "<div class='col-md-" . $column .  " col-incident text-xs-center p-a-1'><h4>" . $monitor['friendlyname'] . "</h4><hr>";
   
