@@ -7,6 +7,8 @@ $dark-gray: #434857;
 $blue-gray: #cfd2da;
 $dark: #252830;
 $halfblack: #555;
+$green: #1bc98e;
+$red: #c93c1b;
 
 /*
 * Base structure
@@ -23,11 +25,20 @@ a {
 /**
 * Incidents
 */
-
 .col-incident {
   height: 19rem;
-  overflow: scroll;
+  overflow-x: hidden;
+  overflow-y: auto;
+    
+    .up {
+       color:$green; 
+    }
+    
+    .down {
+        color:$red;
+    }
 }
+
 /*
 * Tables
 */
