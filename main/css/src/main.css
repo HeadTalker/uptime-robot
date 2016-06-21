@@ -18,7 +18,14 @@ a {
 */
 .col-incident {
   height: 19rem;
-  overflow: scroll;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.col-incident .up {
+  color: #1bc98e;
+}
+.col-incident .down {
+  color: #c93c1b;
 }
 
 /*

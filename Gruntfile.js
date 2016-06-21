@@ -140,5 +140,6 @@ module.exports = function(grunt){
 
   // Do the task
   grunt.registerTask('default', ['copy', 'sass', 'csscomb', 'cssmin', 'uglify', 'watch']);
+  grunt.registerTask('build', ['copy', 'sass', 'csscomb', 'cssmin', 'uglify']);
 
 };

@@ -133,7 +133,7 @@ class monitor_robot {
 
           foreach ( $monitor['log'] as $log ):
          
-          echo "<small>" . _( 'Monitor' ) . ' ' . $this->log_type( $log['type'] ) . ' ' . _( 'on' ) . ' ' . $log['datetime'] . "</small><hr>"; 
+          echo "<span class=" . $this->log_type( $log['type'] ) . ">" . _( 'Monitor' ) . ' ' . $this->log_type( $log['type'] ) . ' ' . _( 'on' ) . ' ' . $log['datetime'] . "</span><hr>"; 
  
           endforeach;
 
