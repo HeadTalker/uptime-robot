@@ -175,9 +175,6 @@ class monitor_robot {
     return $type_name;
   }
 
-  
-
-
   /**
   * Monitor Type Name
   *
