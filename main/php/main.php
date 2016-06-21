@@ -43,7 +43,7 @@ class monitor_robot {
 
     $response         = curl_exec( $curl );
     $monitor_response = json_decode( $response, true );
-
+ 
     return $monitor_response;
   }
 
@@ -110,6 +110,72 @@ class monitor_robot {
     return $data;
 
   }
+  
+  /**
+  * Past Incidents
+  *
+  */
+
+  public function past_incidents( $monitor_response ) {
+    if ( is_array( $monitor_response['monitors']['monitor'] ) ) {
+
+      if ( count( $monitor_response['monitors']['monitor'] ) >= 4 ) {
+        $column = 3;
+      } else {
+        $column = 12;
+      }
+ 
+      foreach ( $monitor_response['monitors']['monitor'] as $monitor ): // loop through each monitor and create a chart
+          
+        echo "<div class='col-md-" . $column .  " col-incident text-xs-center p-a-1'><h4>" . $monitor['friendlyname'] . "</h4><hr>";
+  
+        if ( isset( $monitor['log'] ) ): 
+
+          foreach ( $monitor['log'] as $log ):
+         
+          echo "<small>" . _( 'Monitor' ) . ' ' . $this->log_type( $log['type'] ) . ' ' . _( 'on' ) . ' ' . $log['datetime'] . "</small><hr>"; 
+ 
+          endforeach;
+
+        endif;
+
+      echo "</div>";
+
+      endforeach;
+    }
+
+  }
+  
+
+  /**
+  * Log Type Name
+  *
+  * @param  int    $type      The log type number value
+  * @return string $type_name The log string name
+  */
+
+  private function log_type( $type ) {
+   switch ( $type ) {
+    case 1:
+      $type_name = _( 'down' );
+      break;
+    case 2:
+      $type_name = _( 'up' );
+      break;
+    case 99:
+      $type_name = _( 'paused' );
+      break;
+    case 98:
+      $type_name = _( 'started' );
+      break;
+    default:
+      $type_name = _( 'Unknown or Error' );
+      break;
+    }
+    return $type_name;
+  }
+
+  
 
 
   /**

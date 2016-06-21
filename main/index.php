@@ -56,5 +56,12 @@
         </div>
       </div>
     </div>
+    <div class="container-fluid">
+      <div class="row">
+        <!-- Past Incidents -->
+        <h2 class="text-xs-center m-t-1 m-b-2"><?php echo _( 'Past Incidents' ); ?></h2>
+        <?php $monitor_robot->past_incidents( $monitor_response ); ?>
+      </div>
+    </div>  
   </body>
 </html>

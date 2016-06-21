@@ -13,6 +13,14 @@ a {
   color: #cfd2da;
 }
 
+/**
+* Incidents
+*/
+.col-incident {
+  height: 19rem;
+  overflow: scroll;
+}
+
 /*
 * Tables
 */
