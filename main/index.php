@@ -47,7 +47,7 @@
                 </tr>
               </thead>
               <tbody>
-                <?php $monitor_robot->monitor_table_body( $monitor_response['monitors']['monitor'] ); ?>
+                <?php $monitor_robot->monitor_table_body( $monitor_response['monitors'] ); ?>
               </tbody>
             </table>
           </div>
