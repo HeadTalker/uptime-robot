@@ -31,13 +31,13 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-12 main">
-          <h1 class="text-xs-center p-b-2"><?php echo _( 'Uptime Monitor' ); ?></h1>
+        <h1 class="text-xs-center p-b-2"><?php echo _( 'Uptime Monitor' ); ?></h1>
           <!-- Table Data -->
           <div class="table-responsive">
             <table id="up-get-monitors-table" class="table table-hover table-bordered">
               <thead>
                 <tr>
-                  <th><?php echo _( 'Name' ); ?></th>
+                <th><?php echo _( 'Name' ); ?></th>
                   <th><?php echo _( 'URL' ); ?></th>
                   <th><?php echo _( 'Status' ); ?></th>
                   <th><?php echo _( 'Type' ); ?></th>
@@ -47,7 +47,7 @@
                 </tr>
               </thead>
               <tbody>
-                <?php $monitor_robot->monitor_table_body( $monitor_response['monitors']['monitor'] ); ?>
+                <?php $monitor_robot->monitor_table_body( $monitor_response['monitors'] ); ?>
               </tbody>
             </table>
           </div>

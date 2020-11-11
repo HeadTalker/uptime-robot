@@ -33,13 +33,28 @@ class monitor_robot {
   */
 
   public function monitor_endpoint( $UP_ACCOUNT_API_KEY ) {
-    $endpoint = "https://api.uptimerobot.com/getMonitors?apiKey=" . $UP_ACCOUNT_API_KEY . "&responseTimes=1&logs=1&format=json&noJsonCallback=1";
+    $endpoint = "https://api.uptimerobot.com/v2/getMonitors";
     $curl     = curl_init( $endpoint );
 
     curl_setopt_array( $curl, [
       CURLOPT_RETURNTRANSFER => true,
       CURLOPT_URL            => $endpoint,
     ] );
+
+    curl_setopt_array($curl, array(
+      CURLOPT_URL => $endpoint,
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_ENCODING => "",
+      CURLOPT_MAXREDIRS => 10,
+      CURLOPT_TIMEOUT => 30,
+      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+      CURLOPT_CUSTOMREQUEST => "POST",
+      CURLOPT_POSTFIELDS => "api_key=" . $UP_ACCOUNT_API_KEY . "&logs=1&format=json&all_time_uptime_ratio=1&response_times=1&response_times_average=60",
+      CURLOPT_HTTPHEADER => array(
+        "cache-control: no-cache",
+        "content-type: application/x-www-form-urlencoded"
+      ),
+    ));
 
     $response         = curl_exec( $curl );
     $monitor_response = json_decode( $response, true );
@@ -60,12 +75,12 @@ class monitor_robot {
       foreach ( $monitor_data as $monitor ) {
 
         $monitor_id           = $monitor['id'];
-        $monitor_name         = $monitor['friendlyname'];
+        $monitor_name         = $monitor['friendly_name'];
         $monitor_url          = $monitor['url'];
         $monitor_type         = $this->monitor_type( $monitor['type'] );
         $monitor_interval     = $monitor['interval'];
         $monitor_status       = $this->monitor_status( $monitor['status'] );
-        $monitor_uptime_ratio = $monitor['alltimeuptimeratio'];
+        $monitor_uptime_ratio = $monitor['all_time_uptime_ratio'];
 
         echo "<tr><td>" . $monitor_name . "</td>";
         echo "<td>" . $monitor_url . "</td>";
@@ -92,13 +107,13 @@ class monitor_robot {
     $response_datetime = [];
     $response_value    = [];
 
-    $monitor['responsetime'] = $monitor_response_data;
+    $monitor['response_times'] = $monitor_response_data;
 
-    if ( is_array( $monitor['responsetime'] ) ) {
+    if ( is_array( $monitor['response_times'] ) ) {
 
-      foreach ( array_reverse( $monitor['responsetime'] ) as $response ) {
+      foreach ( array_reverse( $monitor['response_times'] ) as $response ) {
 
-        $response_datetime[] = $response['datetime'];
+        $response_datetime[] = date('Y-m-d H:i', $response['datetime']);
         $response_value[]    = $response['value'];
 
       }
@@ -110,6 +125,16 @@ class monitor_robot {
     return $data;
 
   }
+
+  /**
+   * Convert seconds to hh:mm:ss format
+   * 
+   */
+  private function pretty_print_seconds($seconds) {
+    $t = round($seconds);
+    return sprintf('%02d:%02d:%02d', ($t/3600),($t/60%60), $t%60);
+  }
+
   
   /**
   * Past Incidents
@@ -117,23 +142,25 @@ class monitor_robot {
   */
 
   public function past_incidents( $monitor_response ) {
-    if ( is_array( $monitor_response['monitors']['monitor'] ) ) {
+    if ( is_array( $monitor_response['monitors'] ) ) {
 
-      if ( count( $monitor_response['monitors']['monitor'] ) >= 4 ) {
+      if ( count( $monitor_response['monitors'] ) >= 4 ) {
         $column = 3;
       } else {
         $column = 12;
       }
  
-      foreach ( $monitor_response['monitors']['monitor'] as $monitor ):
+      foreach ( $monitor_response['monitors'] as $monitor ):
           
-        echo "<div class='col-md-" . $column .  " col-incident text-xs-center p-a-1'><h4>" . $monitor['friendlyname'] . "</h4><hr>";
+        echo "<div class='col-md-" . $column .  " col-incident text-xs-center p-a-1'><h4>" . $monitor['friendly_name'] . "</h4><hr>";
   
-        if ( isset( $monitor['log'] ) ): 
+        if ( isset( $monitor['logs'] ) ): 
 
-          foreach ( $monitor['log'] as $log ):
-         
-          echo "<span class=" . $this->log_type( $log['type'] ) . ">" . _( 'Monitor' ) . ' ' . $this->log_type( $log['type'] ) . ' ' . _( 'on' ) . ' ' . $log['datetime'] . "</span><hr>"; 
+          foreach ( $monitor['logs'] as $log ):
+
+          echo "<span class=" . $this->log_type( $log['type'] ) . ">" . _( 'Monitor' ) . ' ' . $this->log_type( $log['type'] ) . ' ' . _( 'on' ) . ' ' . date('Y-m-d H:i:s', $log['datetime']) . "</br>"; 
+          echo "Duration : " . $this->pretty_print_seconds($log['duration']) ."</br>"; 
+          echo "Reason : " . $log['reason']['code'] . " " . $log['reason']['detail'] . "</span><hr>"; 
  
           endforeach;
 
@@ -145,7 +172,7 @@ class monitor_robot {
     }
 
   }
-  
+
 
   /**
   * Log Type Name
@@ -242,27 +269,27 @@ class monitor_robot {
 
   public function charts( $monitor_response ) {
 
-    if ( is_array( $monitor_response['monitors']['monitor'] ) ): // check if we have monitors before trying to show charts
+    if ( is_array( $monitor_response['monitors'] ) ): // check if we have monitors before trying to show charts
 
       $i = 0;
 
-      if ( count( $monitor_response['monitors']['monitor'] ) > 1 ) {
+      if ( count( $monitor_response['monitors'] ) > 1 ) {
         $column = 6;
       } else {
         $column = 12;
       }
 
-      foreach ( $monitor_response['monitors']['monitor'] as $monitor ): // loop through each monitor and create a chart
+      foreach ( $monitor_response['monitors'] as $monitor ): // loop through each monitor and create a chart
 
-        if ( isset( $monitor['responsetime'] ) ): ?>
+        if ( isset( $monitor['response_times'] ) ): ?>
 
           <div class="col-md-<?php echo $column; ?> col-chart text-xs-center">
-            <h3><?php echo $monitor['friendlyname']; ?></h3>
+            <h3><?php echo $monitor['friendly_name']; ?></h3>
             <h6><?php echo $this->monitor_type( $monitor['type'] ) . ' ' . _( 'Response Times' ); ?></h6>
             <canvas id="chart<?php echo $i; ?>"></canvas>
           </div>
 
-          <?php list( $response_datetime, $response_value ) = $this->monitor_response_data( $monitor['responsetime'] ); ?>
+          <?php list( $response_datetime, $response_value ) = $this->monitor_response_data( $monitor['response_times'] ); ?>
 
           <script type="text/javascript">
 
@@ -306,7 +333,7 @@ class monitor_robot {
 
         <?php else: ?>
 
-         <div class="text-xs-center"><?php echo $monitor['friendlyname'] . ' ' . _( 'does not enough data to make a graph yet.' ); ?></div>
+         <div class="text-xs-center"><?php echo $monitor['friendly_name'] . ' ' . _( 'does not enough data to make a graph yet.' ); ?></div>
 
        <?php endif;
 
